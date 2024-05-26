@@ -104,7 +104,7 @@ void Print()
 void InitProperties()
 {
     SetConsoleOutputCP(65001);
-    system("mode 80,40");
+    system("mode 37,20");
 }
 
 void InitNewGame()
@@ -391,7 +391,7 @@ void CheckState()
             {
                 Spawn();
                 Print();
-                if(CountEmptyTiles()!=1) return KeyPress();
+                if(CountEmptyTiles()!=0) return KeyPress();
             }
         }
     }
@@ -423,13 +423,13 @@ void CheckState()
 void GameWon()
 {
     Print();
-    printf("\n\nGame Won");
+    printf("\nGame Won");
 }
 
 void GameOver()
 {
     Print();
-    printf("\n\nGame Over");
+    printf("\nGame Over");
 }
 
 int PlayAnotherGame()
@@ -456,9 +456,11 @@ int main()
     do
     {
         InitNewGame();
-        printf("\n\nWould you like to play again? Y/N");
+        printf("\nWould you like to play again? Y/N");
     }
     while(PlayAnotherGame());
 
+    system("cls");
     printf("Thank you for playing!!!");
+    getch();
 }
