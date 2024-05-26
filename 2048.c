@@ -4,14 +4,16 @@
 #include<windows.h>
 
 
+
+
 #define n 4
 
 
 
 
+
+
 int values[n][n];
-
-
 
 
 
@@ -36,37 +38,28 @@ int  CountEmptyTiles();
 
 
 
-
-void KeyPress()
+void InitProperties()
 {
-    switch(getch())
-    {
-    case 224:
-    case 0:
-        switch(getch())
-        {
-        case 72: //Up
-            Up();
-            break;
-        case 80: //Down
-            Down();
-            break;
-        case 77: //Right
-            Right();
-            break;
-        case 75: //Left
-            Left();
-            break;
-        default:
-            KeyPress();
-            break;
-        }
-        break;
-    default:
-        KeyPress();
-        break;
-    }
+    SetConsoleOutputCP(65001);
+    system("mode 37,20");
 }
+
+void InitNewGame()
+{
+    for(int row=0; row<n; row++)
+    {
+        for(int col=0; col<n; col++)
+        {
+            values[row][col]=0;
+        }
+    }
+    Spawn();
+    Print();
+    KeyPress();
+}
+
+
+
 
 void Print()
 {
@@ -119,25 +112,38 @@ void Print()
     }
 }
 
-void InitProperties()
+
+void KeyPress()
 {
-    SetConsoleOutputCP(65001);
-    system("mode 37,20");
+    switch(getch())
+    {
+    case 224:
+    case 0:
+        switch(getch())
+        {
+        case 72: //Up
+            Up();
+            break;
+        case 80: //Down
+            Down();
+            break;
+        case 77: //Right
+            Right();
+            break;
+        case 75: //Left
+            Left();
+            break;
+        default:
+            KeyPress();
+            break;
+        }
+        break;
+    default:
+        KeyPress();
+        break;
+    }
 }
 
-void InitNewGame()
-{
-    for(int row=0; row<n; row++)
-    {
-        for(int col=0; col<n; col++)
-        {
-            values[row][col]=0;
-        }
-    }
-    Spawn();
-    Print();
-    KeyPress();
-}
 
 void Spawn()
 {
@@ -176,264 +182,6 @@ void Spawn()
             }
         }
     }
-}
-
-
-
-
-void Up()
-{
-    for(int col=0; col<n; col++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=0;
-        for(int row=0; row<n; row++)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx++;
-            }
-        }
-        for(int row=0; row<n; row++)
-        {
-            values[row][col]=temp[row];
-        }
-    }
-
-
-    for(int col=0; col<n; col++)
-    {
-        for(int row=0; row<n-1; row++)
-        {
-            if(values[row][col]==values[row+1][col])
-            {
-                values[row][col]*=2;
-                values[row+1][col]=0;
-                row++;
-            }
-        }
-    }
-
-
-    for(int col=0; col<n; col++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=0;
-        for(int row=0; row<n; row++)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx++;
-            }
-        }
-        for(int row=0; row<n; row++)
-        {
-            values[row][col]=temp[row];
-        }
-    }
-    CheckState();
-}
-
-
-void Down()
-{
-    for(int col=0; col<n; col++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=3;
-        for(int row=n-1; row>=0; row--)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx--;
-            }
-        }
-        for(int row=0; row<n; row++)
-        {
-            values[row][col]=temp[row];
-        }
-    }
-
-
-    for(int col=0; col<n; col++)
-    {
-        for(int row=n-1; row>0; row--)
-        {
-            if(values[row][col]==values[row-1][col])
-            {
-                values[row][col]*=2;
-                values[row-1][col]=0;
-                row--;
-            }
-        }
-    }
-
-
-    for(int col=0; col<n; col++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=3;
-        for(int row=n-1; row>=0; row--)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx--;
-            }
-        }
-        for(int row=0; row<n; row++)
-        {
-            values[row][col]=temp[row];
-        }
-    }
-    CheckState();
-}
-
-
-void Left()
-{
-    for(int row=0; row<n; row++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=0;
-        for(int col=0; col<n; col++)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx++;
-            }
-        }
-        for(int col=0; col<n; col++)
-        {
-            values[row][col]=temp[col];
-        }
-    }
-
-
-    for(int row=0; row<n; row++)
-    {
-        for(int col=0; col<n-1; col++)
-        {
-            if(values[row][col]==values[row][col+1])
-            {
-                values[row][col]*=2;
-                values[row][col+1]=0;
-                col++;
-            }
-        }
-    }
-
-
-    for(int row=0; row<n; row++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=0;
-        for(int col=0; col<n; col++)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx++;
-            }
-        }
-        for(int col=0; col<n; col++)
-        {
-            values[row][col]=temp[col];
-        }
-    }
-    CheckState();
-}
-
-
-void Right()
-{
-    for(int row=0; row<n; row++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=3;
-        for(int col=n-1; col>=0; col--)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx--;
-            }
-        }
-        for(int col=0; col<n; col++)
-        {
-            values[row][col]=temp[col];
-        }
-    }
-
-
-    for(int row=0; row<n; row++)
-    {
-        for(int col=n-1; col>0; col--)
-        {
-            if(values[row][col]==values[row][col-1])
-            {
-                values[row][col]*=2;
-                values[row][col-1]=0;
-                col--;
-            }
-        }
-    }
-
-
-    for(int row=0; row<n; row++)
-    {
-        int temp[n];
-        for(int i=0; i<n; i++)
-        {
-            temp[i]=0;
-        }
-        int idx=3;
-        for(int col=n-1; col>=0; col--)
-        {
-            if(values[row][col]!=0)
-            {
-                temp[idx]=values[row][col];
-                idx--;
-            }
-        }
-        for(int col=0; col<n; col++)
-        {
-            values[row][col]=temp[col];
-        }
-    }
-    CheckState();
 }
 
 int CountEmptyTiles()
@@ -504,6 +252,244 @@ void CheckState()
     return GameOver();
 }
 
+
+void Up()
+{
+    for(int col=0; col<n; col++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=0;
+        for(int row=0; row<n; row++)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx++;
+            }
+        }
+        for(int row=0; row<n; row++)
+        {
+            values[row][col]=temp[row];
+        }
+    }
+    for(int col=0; col<n; col++)
+    {
+        for(int row=0; row<n-1; row++)
+        {
+            if(values[row][col]==values[row+1][col])
+            {
+                values[row][col]*=2;
+                values[row+1][col]=0;
+                row++;
+            }
+        }
+    }
+    for(int col=0; col<n; col++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=0;
+        for(int row=0; row<n; row++)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx++;
+            }
+        }
+        for(int row=0; row<n; row++)
+        {
+            values[row][col]=temp[row];
+        }
+    }
+    CheckState();
+}
+
+void Down()
+{
+    for(int col=0; col<n; col++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=3;
+        for(int row=n-1; row>=0; row--)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx--;
+            }
+        }
+        for(int row=0; row<n; row++)
+        {
+            values[row][col]=temp[row];
+        }
+    }
+    for(int col=0; col<n; col++)
+    {
+        for(int row=n-1; row>0; row--)
+        {
+            if(values[row][col]==values[row-1][col])
+            {
+                values[row][col]*=2;
+                values[row-1][col]=0;
+                row--;
+            }
+        }
+    }
+    for(int col=0; col<n; col++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=3;
+        for(int row=n-1; row>=0; row--)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx--;
+            }
+        }
+        for(int row=0; row<n; row++)
+        {
+            values[row][col]=temp[row];
+        }
+    }
+    CheckState();
+}
+
+void Left()
+{
+    for(int row=0; row<n; row++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=0;
+        for(int col=0; col<n; col++)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx++;
+            }
+        }
+        for(int col=0; col<n; col++)
+        {
+            values[row][col]=temp[col];
+        }
+    }
+    for(int row=0; row<n; row++)
+    {
+        for(int col=0; col<n-1; col++)
+        {
+            if(values[row][col]==values[row][col+1])
+            {
+                values[row][col]*=2;
+                values[row][col+1]=0;
+                col++;
+            }
+        }
+    }
+    for(int row=0; row<n; row++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=0;
+        for(int col=0; col<n; col++)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx++;
+            }
+        }
+        for(int col=0; col<n; col++)
+        {
+            values[row][col]=temp[col];
+        }
+    }
+    CheckState();
+}
+
+void Right()
+{
+    for(int row=0; row<n; row++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=3;
+        for(int col=n-1; col>=0; col--)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx--;
+            }
+        }
+        for(int col=0; col<n; col++)
+        {
+            values[row][col]=temp[col];
+        }
+    }
+    for(int row=0; row<n; row++)
+    {
+        for(int col=n-1; col>0; col--)
+        {
+            if(values[row][col]==values[row][col-1])
+            {
+                values[row][col]*=2;
+                values[row][col-1]=0;
+                col--;
+            }
+        }
+    }
+    for(int row=0; row<n; row++)
+    {
+        int temp[n];
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
+        int idx=3;
+        for(int col=n-1; col>=0; col--)
+        {
+            if(values[row][col]!=0)
+            {
+                temp[idx]=values[row][col];
+                idx--;
+            }
+        }
+        for(int col=0; col<n; col++)
+        {
+            values[row][col]=temp[col];
+        }
+    }
+    CheckState();
+}
+
+
 void GameWon()
 {
     Print();
@@ -515,6 +501,23 @@ void GameOver()
     Print();
     printf("\nGame Over");
 }
+
+
+int main()
+{
+    InitProperties();
+
+    do
+    {
+        InitNewGame();
+        printf("\nWould you like to play again? Y/N");
+    }
+    while(PlayAnotherGame());
+
+    system("cls");
+    printf("Thank you for playing!!!");
+}
+
 
 int PlayAnotherGame()
 {
@@ -535,20 +538,4 @@ int PlayAnotherGame()
         return PlayAnotherGame();
         break;
     }
-}
-
-
-int main()
-{
-    InitProperties();
-
-    do
-    {
-        InitNewGame();
-        printf("\nWould you like to play again? Y/N");
-    }
-    while(PlayAnotherGame());
-
-    system("cls");
-    printf("Thank you for playing!!!");
 }
