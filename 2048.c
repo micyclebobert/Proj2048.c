@@ -462,5 +462,4 @@ int main()
 
     system("cls");
     printf("Thank you for playing!!!");
-    getch();
 }
