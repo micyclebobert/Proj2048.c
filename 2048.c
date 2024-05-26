@@ -77,26 +77,44 @@ void Print()
     {
         for(int col=0; col<n; col++)
         {
-            if(col==0) printf("║");
+            if(col==0)
+            {
+                printf("║");
+            }
             if(values[row][col]!=0)
             {
-                if(values[row][col]<=99) printf("   %2d   ", values[row][col]);
-                else printf("  %4d  ", values[row][col]);
+                if(values[row][col]<=99)
+                {
+                    printf("   %2d   ", values[row][col]);
+                }
+                else
+                {
+                    printf("  %4d  ", values[row][col]);
+                }
             }
-            else printf("        ");
-            if(col==n-1) printf("║\n");
-            else         printf("│");
+            else
+            {
+                printf("        ");
+            }
+            if(col==n-1)
+            {
+                printf("║\n");
+            }
+            else
+            {
+                printf("│");
+            }
         }
-        if(row==n-1)
-        {
-            printf("║        │        │        │        ║\n");
-            printf("╚════════╧════════╧════════╧════════╝\n");
-        }
-        else
+        if(row!=n-1)
         {
             printf("║        │        │        │        ║\n");
             printf("╟────────┼────────┼────────┼────────╢\n");
             printf("║        │        │        │        ║\n");
+        }
+        else
+        {
+            printf("║        │        │        │        ║\n");
+            printf("╚════════╧════════╧════════╧════════╝\n");
         }
     }
 }
@@ -109,7 +127,13 @@ void InitProperties()
 
 void InitNewGame()
 {
-    for(int row=0; row<n; row++) for(int col=0; col<n; col++) values[row][col]=0;
+    for(int row=0; row<n; row++)
+    {
+        for(int col=0; col<n; col++)
+        {
+            values[row][col]=0;
+        }
+    }
     Spawn();
     Print();
     KeyPress();
@@ -118,7 +142,16 @@ void InitNewGame()
 void Spawn()
 {
     int count=0;
-    for(int row=0; row<n; row++) for(int col=0; col<n; col++) if(values[row][col]==0) count++;
+    for(int row=0; row<n; row++)
+    {
+        for(int col=0; col<n; col++)
+        {
+            if(values[row][col]==0)
+            {
+                count++;
+            }
+        }
+    }
     int seed=clock();
     int rand=seed%count;
     for(int row=0; row<n; row++)
@@ -129,8 +162,14 @@ void Spawn()
             {
                 if(rand==0)
                 {
-                    if(seed%10<=6) values[row][col]=2;
-                    else           values[row][col]=4;
+                    if(seed%10<=6)
+                    {
+                        values[row][col]=2;
+                    }
+                    else
+                    {
+                        values[row][col]=4;
+                    }
                     return;
                 }
                 rand--;
@@ -147,7 +186,10 @@ void Up()
     for(int col=0; col<n; col++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=0;
         for(int row=0; row<n; row++)
         {
@@ -181,7 +223,10 @@ void Up()
     for(int col=0; col<n; col++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=0;
         for(int row=0; row<n; row++)
         {
@@ -205,7 +250,10 @@ void Down()
     for(int col=0; col<n; col++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=3;
         for(int row=n-1; row>=0; row--)
         {
@@ -239,7 +287,10 @@ void Down()
     for(int col=0; col<n; col++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=3;
         for(int row=n-1; row>=0; row--)
         {
@@ -263,7 +314,10 @@ void Left()
     for(int row=0; row<n; row++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=0;
         for(int col=0; col<n; col++)
         {
@@ -297,7 +351,10 @@ void Left()
     for(int row=0; row<n; row++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=0;
         for(int col=0; col<n; col++)
         {
@@ -321,7 +378,10 @@ void Right()
     for(int row=0; row<n; row++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=3;
         for(int col=n-1; col>=0; col--)
         {
@@ -355,7 +415,10 @@ void Right()
     for(int row=0; row<n; row++)
     {
         int temp[n];
-        for(int i=0; i<n; i++) temp[i]=0;
+        for(int i=0; i<n; i++)
+        {
+            temp[i]=0;
+        }
         int idx=3;
         for(int col=n-1; col>=0; col--)
         {
@@ -376,13 +439,31 @@ void Right()
 int CountEmptyTiles()
 {
     int count=0;
-    for(int row=0; row<n; row++) for(int col=0; col<n; col++) if(values[row][col]==0) count++;
+    for(int row=0; row<n; row++)
+    {
+        for(int col=0; col<n; col++)
+        {
+            if(values[row][col]==0)
+            {
+                count++;
+            }
+        }
+    }
     return count;
 }
 
 void CheckState()
 {
-    for(int row=0; row<n; row++) for(int col=0; col<n; col++) if(values[row][col]==2048) return GameWon();
+    for(int row=0; row<n; row++)
+    {
+        for(int col=0; col<n; col++)
+        {
+            if(values[row][col]==2048)
+            {
+                return GameWon();
+            }
+        }
+    }
     for(int row=0; row<n; row++)
     {
         for(int col=0; col<n; col++)
@@ -391,7 +472,10 @@ void CheckState()
             {
                 Spawn();
                 Print();
-                if(CountEmptyTiles()!=0) return KeyPress();
+                if(CountEmptyTiles()!=0)
+                {
+                    return KeyPress();
+                }
             }
         }
     }
@@ -441,6 +525,11 @@ int PlayAnotherGame()
         break;
     case 'N':
         return 0;
+        break;
+    case 224:
+    case 0:
+        getch();
+        return PlayAnotherGame();
         break;
     default:
         return PlayAnotherGame();
