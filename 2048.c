@@ -9,11 +9,16 @@
 #define n 4
 
 
+struct val
+{
+    int values[n][n];
+} v;
+FILE *f;
 
 
+//v.values
 
-
-int values[n][n];
+//int values[n][n];
 
 
 
@@ -24,12 +29,15 @@ void Left();
 void Right();
 void Print();
 void Spawn();
+void Illegal();
 void GameWon();
 void GameOver();
-void KeyPress();
+void GameSaver();
+void GameLoader();
 void CheckState();
 void InitNewGame();
 void InitProperties();
+void GameKeyPresses();
 int  PlayAnotherGame();
 int  CountEmptyTiles();
 
@@ -50,13 +58,66 @@ void InitNewGame()
     {
         for(int col=0; col<n; col++)
         {
-            values[row][col]=0;
+            v.values[row][col]=0;
         }
     }
     Spawn();
     Print();
-    KeyPress();
+    GameKeyPresses();
 }
+
+
+
+
+
+void Illegal()
+{
+    Print();
+    printf("\nIllegal Input!!");
+}
+
+
+
+
+void GameSaver()
+{
+    f=fopen("2048.bin","wb");
+    if(f!=0)
+    {
+        int x=fwrite(&v,sizeof(v),1,f);
+        fclose(f);
+        Print();
+        if(x==1) printf("\nFile saved successfully");
+        else     printf("\nError saving the file");
+    }
+    else
+    {
+        Print();
+        printf("\nUnable to create file");
+    }
+    GameKeyPresses();
+}
+
+
+void GameLoader()
+{
+    f=fopen("2048.bin","rb");
+    if(f!=0)
+    {
+        int x=fread(&v,sizeof(v),1,f);
+        fclose(f);
+        Print();
+        if(x==1) printf("\nGame loaded successfully");
+        else     printf("\nError loading the file");
+    }
+    else
+    {
+        Print();
+        printf("\nFile not found");
+    }
+    GameKeyPresses();
+}
+
 
 
 
@@ -74,15 +135,15 @@ void Print()
             {
                 printf("║");
             }
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                if(values[row][col]<=99)
+                if(v.values[row][col]<=99)
                 {
-                    printf("   %2d   ", values[row][col]);
+                    printf("   %2d   ", v.values[row][col]);
                 }
                 else
                 {
-                    printf("  %4d  ", values[row][col]);
+                    printf("  %4d  ", v.values[row][col]);
                 }
             }
             else
@@ -113,10 +174,16 @@ void Print()
 }
 
 
-void KeyPress()
+void GameKeyPresses()
 {
     switch(getch())
     {
+    case 19: //Ctrl+S
+        GameSaver();
+        break;
+    case 12: //Ctrl+L
+        GameLoader();
+        break;
     case 224:
     case 0:
         switch(getch())
@@ -134,12 +201,14 @@ void KeyPress()
             Left();
             break;
         default:
-            KeyPress();
+            Illegal();
+            GameKeyPresses();
             break;
         }
         break;
     default:
-        KeyPress();
+        Illegal();
+        GameKeyPresses();
         break;
     }
 }
@@ -152,7 +221,7 @@ void Spawn()
     {
         for(int col=0; col<n; col++)
         {
-            if(values[row][col]==0)
+            if(v.values[row][col]==0)
             {
                 count++;
             }
@@ -164,17 +233,17 @@ void Spawn()
     {
         for(int col=0; col<n; col++)
         {
-            if (values[row][col]==0)
+            if (v.values[row][col]==0)
             {
                 if(rand==0)
                 {
                     if(seed%10<=6)
                     {
-                        values[row][col]=2;
+                        v.values[row][col]=2;
                     }
                     else
                     {
-                        values[row][col]=4;
+                        v.values[row][col]=4;
                     }
                     return;
                 }
@@ -191,7 +260,7 @@ int CountEmptyTiles()
     {
         for(int col=0; col<n; col++)
         {
-            if(values[row][col]==0)
+            if(v.values[row][col]==0)
             {
                 count++;
             }
@@ -206,7 +275,7 @@ void CheckState()
     {
         for(int col=0; col<n; col++)
         {
-            if(values[row][col]==2048)
+            if(v.values[row][col]==2048)
             {
                 return GameWon();
             }
@@ -216,13 +285,13 @@ void CheckState()
     {
         for(int col=0; col<n; col++)
         {
-            if(values[row][col]==0)
+            if(v.values[row][col]==0)
             {
                 Spawn();
                 Print();
                 if(CountEmptyTiles()!=0)
                 {
-                    return KeyPress();
+                    return GameKeyPresses();
                 }
             }
         }
@@ -231,10 +300,10 @@ void CheckState()
     {
         for(int col=0; col<n-1; col++)
         {
-            if(values[row][col]==values[row][col+1])
+            if(v.values[row][col]==v.values[row][col+1])
             {
                 Print();
-                return KeyPress();
+                return GameKeyPresses();
             }
         }
     }
@@ -242,10 +311,10 @@ void CheckState()
     {
         for(int row=0; row<n-1; row++)
         {
-            if(values[row][col]==values[row+1][col])
+            if(v.values[row][col]==v.values[row+1][col])
             {
                 Print();
-                return KeyPress();
+                return GameKeyPresses();
             }
         }
     }
@@ -265,25 +334,25 @@ void Up()
         int idx=0;
         for(int row=0; row<n; row++)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx++;
             }
         }
         for(int row=0; row<n; row++)
         {
-            values[row][col]=temp[row];
+            v.values[row][col]=temp[row];
         }
     }
     for(int col=0; col<n; col++)
     {
         for(int row=0; row<n-1; row++)
         {
-            if(values[row][col]==values[row+1][col])
+            if(v.values[row][col]==v.values[row+1][col])
             {
-                values[row][col]*=2;
-                values[row+1][col]=0;
+                v.values[row][col]*=2;
+                v.values[row+1][col]=0;
                 row++;
             }
         }
@@ -298,15 +367,15 @@ void Up()
         int idx=0;
         for(int row=0; row<n; row++)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx++;
             }
         }
         for(int row=0; row<n; row++)
         {
-            values[row][col]=temp[row];
+            v.values[row][col]=temp[row];
         }
     }
     CheckState();
@@ -324,25 +393,25 @@ void Down()
         int idx=3;
         for(int row=n-1; row>=0; row--)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx--;
             }
         }
         for(int row=0; row<n; row++)
         {
-            values[row][col]=temp[row];
+            v.values[row][col]=temp[row];
         }
     }
     for(int col=0; col<n; col++)
     {
         for(int row=n-1; row>0; row--)
         {
-            if(values[row][col]==values[row-1][col])
+            if(v.values[row][col]==v.values[row-1][col])
             {
-                values[row][col]*=2;
-                values[row-1][col]=0;
+                v.values[row][col]*=2;
+                v.values[row-1][col]=0;
                 row--;
             }
         }
@@ -357,15 +426,15 @@ void Down()
         int idx=3;
         for(int row=n-1; row>=0; row--)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx--;
             }
         }
         for(int row=0; row<n; row++)
         {
-            values[row][col]=temp[row];
+            v.values[row][col]=temp[row];
         }
     }
     CheckState();
@@ -383,25 +452,25 @@ void Left()
         int idx=0;
         for(int col=0; col<n; col++)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx++;
             }
         }
         for(int col=0; col<n; col++)
         {
-            values[row][col]=temp[col];
+            v.values[row][col]=temp[col];
         }
     }
     for(int row=0; row<n; row++)
     {
         for(int col=0; col<n-1; col++)
         {
-            if(values[row][col]==values[row][col+1])
+            if(v.values[row][col]==v.values[row][col+1])
             {
-                values[row][col]*=2;
-                values[row][col+1]=0;
+                v.values[row][col]*=2;
+                v.values[row][col+1]=0;
                 col++;
             }
         }
@@ -416,15 +485,15 @@ void Left()
         int idx=0;
         for(int col=0; col<n; col++)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx++;
             }
         }
         for(int col=0; col<n; col++)
         {
-            values[row][col]=temp[col];
+            v.values[row][col]=temp[col];
         }
     }
     CheckState();
@@ -442,25 +511,25 @@ void Right()
         int idx=3;
         for(int col=n-1; col>=0; col--)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx--;
             }
         }
         for(int col=0; col<n; col++)
         {
-            values[row][col]=temp[col];
+            v.values[row][col]=temp[col];
         }
     }
     for(int row=0; row<n; row++)
     {
         for(int col=n-1; col>0; col--)
         {
-            if(values[row][col]==values[row][col-1])
+            if(v.values[row][col]==v.values[row][col-1])
             {
-                values[row][col]*=2;
-                values[row][col-1]=0;
+                v.values[row][col]*=2;
+                v.values[row][col-1]=0;
                 col--;
             }
         }
@@ -475,15 +544,15 @@ void Right()
         int idx=3;
         for(int col=n-1; col>=0; col--)
         {
-            if(values[row][col]!=0)
+            if(v.values[row][col]!=0)
             {
-                temp[idx]=values[row][col];
+                temp[idx]=v.values[row][col];
                 idx--;
             }
         }
         for(int col=0; col<n; col++)
         {
-            values[row][col]=temp[col];
+            v.values[row][col]=temp[col];
         }
     }
     CheckState();
@@ -515,7 +584,7 @@ int main()
     while(PlayAnotherGame());
 
     system("cls");
-    printf("Thank you for playing!!!");
+    printf("\n\n\n\n\n\n\n       Thank you for playing!!       \n\n\n\n\n\n\n\n");
 }
 
 
