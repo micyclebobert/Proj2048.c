@@ -38,8 +38,9 @@ void CheckState();
 void InitNewGame();
 void InitProperties();
 void GameKeyPresses();
-int  PlayAnotherGame();
-int  CountEmptyTiles();
+void InformationMenu();
+void ThankfulEndMenu();
+void PlayAnotherGame();
 
 
 
@@ -184,6 +185,9 @@ void GameKeyPresses()
     case 12: //Ctrl+L
         GameLoader();
         break;
+    case 23: //Ctrl+W
+        ThankfulEndMenu();
+        break;
     case 224:
     case 0:
         switch(getch())
@@ -253,22 +257,6 @@ void Spawn()
     }
 }
 
-int CountEmptyTiles()
-{
-    int count=0;
-    for(int row=0; row<n; row++)
-    {
-        for(int col=0; col<n; col++)
-        {
-            if(v.values[row][col]==0)
-            {
-                count++;
-            }
-        }
-    }
-    return count;
-}
-
 void CheckState()
 {
     for(int row=0; row<n; row++)
@@ -281,6 +269,17 @@ void CheckState()
             }
         }
     }
+    int count=0;
+    for(int row=0; row<n; row++)
+    {
+        for(int col=0; col<n; col++)
+        {
+            if(v.values[row][col]==0)
+            {
+                count++;
+            }
+        }
+    }
     for(int row=0; row<n; row++)
     {
         for(int col=0; col<n; col++)
@@ -289,7 +288,7 @@ void CheckState()
             {
                 Spawn();
                 Print();
-                if(CountEmptyTiles()!=0)
+                if(count!=1)
                 {
                     return GameKeyPresses();
                 }
@@ -572,39 +571,74 @@ void GameOver()
 }
 
 
-int main()
+void InformationMenu()
 {
-    InitProperties();
-
-    do
-    {
-        InitNewGame();
-        printf("\nWould you like to play again? Y/N");
-    }
-    while(PlayAnotherGame());
-
-    system("cls");
-    printf("\n\n\n\n\n\n\n       Thank you for playing!!       \n\n\n\n\n\n\n\n");
+    printf("Combine same tiles to reach 2048.");
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    printf("\nKeybinds:");
+    printf("\n");
+    printf("\n");
+    printf("\n   ▲ / ↑      Up");
+    printf("\n   ▼ / ↓      Down");
+    printf("\n   ◄ / ←      Left");
+    printf("\n   ► / →      Right");
+    printf("\n");
+    printf("\n");
+    printf("\n   Ctrl+S     Save current game");
+    printf("\n   Ctrl+L     Load a saved game");
+    printf("\n   Ctrl+W     Exit the program");
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    printf("\nPress any key to continue");
+    int c=getch();
+    if(c==23) ThankfulEndMenu();
+    if(c==0||c==224) getch();
 }
 
-
-int PlayAnotherGame()
+void PlayAnotherGame()
 {
     switch(toupper(getch()))
     {
     case 'Y':
-        return 1;
+        return;
         break;
     case 'N':
-        return 0;
+    case  23: //Ctrl+W
+        ThankfulEndMenu();
         break;
     case 224:
     case 0:
         getch();
-        return PlayAnotherGame();
+        PlayAnotherGame();
         break;
     default:
-        return PlayAnotherGame();
+        PlayAnotherGame();
         break;
+    }
+}
+
+void ThankfulEndMenu()
+{
+    system("cls");
+    printf("\n\n\n\n\n\n\n       Thank you for playing!!       \n\n\n\n\n\n\n\n");
+    exit(0);
+}
+
+
+
+
+int main()
+{
+    InitProperties();
+    InformationMenu();
+
+    while(1)
+    {
+        InitNewGame();
+        printf("\nWould you like to play again? Y/N");
+        PlayAnotherGame();
     }
 }
